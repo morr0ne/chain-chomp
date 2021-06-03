@@ -1,0 +1,22 @@
+cargo-features = ["strip"]
+
+[package]
+name = "chain-chomp"
+version = "0.1.0"
+authors = ["Federico Morrone <contact@morrone.dev>"]
+edition = "2018"
+
+[dependencies]
+anyhow = "1.0.40"
+bitcoincore-rpc = "0.13.0"
+clap = { version = "3.0.0-beta.2", default-features = false, features = ["cargo", "color", "std", "suggestions", "wrap_help"] }
+once_cell = { version = "1.7.2", features = ["parking_lot"] }
+rocket = "0.4.10"
+rocket_contrib = { version = "0.4.10", default-features = false, features = ["helmet", "json"] }
+
+[profile.release]
+lto = true
+codegen-units = 1
+incremental = false
+# opt-level = "z"
+strip = true
