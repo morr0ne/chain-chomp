@@ -35,6 +35,11 @@ fn get_block(blockhash: &RawStr) -> Result<Json<GetBlockResult>> {
     }))
 }
 
+#[get("/getblockcount")]
+fn get_block_count() -> Result<String> {
+    Ok(unsafe { CLIENT.get_unchecked().get_block_count()?.to_string() })
+}
+
 #[get("/getblockchaininfo")]
 fn get_blockchain_info() -> Result<Json<GetBlockchainInfoResult>> {
     Ok(Json(unsafe {
@@ -92,7 +97,12 @@ fn main() -> Result<()> {
         .attach(SpaceHelmet::default())
         .mount(
             "/",
-            routes![get_best_block_hash, get_block, get_blockchain_info],
+            routes![
+                get_best_block_hash,
+                get_block,
+                get_block_count,
+                get_blockchain_info
+            ],
         )
         .launch();
 
