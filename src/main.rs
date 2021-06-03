@@ -16,29 +16,30 @@ use std::str::FromStr;
 
 static CLIENT: OnceCell<Client> = OnceCell::new();
 
+// SAFETY: The client is only initilized once and then the server is started
+// meaning it's safe to call get_unchecked inside routes
+
 #[get("/getbestblockhash")]
 fn get_best_block_hash() -> Result<Json<BlockHash>> {
-    // SAFETY: The client is only initilized once and then the server is started
-    let hash = unsafe { CLIENT.get_unchecked().get_best_block_hash()? };
-    Ok(Json(hash))
+    Ok(Json(unsafe {
+        CLIENT.get_unchecked().get_best_block_hash()?
+    }))
 }
 
 #[get("/getblock?<blockhash>")]
 fn get_block(blockhash: &RawStr) -> Result<Json<GetBlockResult>> {
-    // SAFETY: The client is only initilized once and then the server is started
-    let block = unsafe {
+    Ok(Json(unsafe {
         CLIENT
             .get_unchecked()
             .get_block_info(&BlockHash::from_str(blockhash)?)?
-    };
-    Ok(Json(block))
+    }))
 }
 
 #[get("/getblockchaininfo")]
 fn get_blockchain_info() -> Result<Json<GetBlockchainInfoResult>> {
-    // SAFETY: The client is only initilized once and then the server is started
-    let info = unsafe { CLIENT.get_unchecked().get_blockchain_info()? };
-    Ok(Json(info))
+    Ok(Json(unsafe {
+        CLIENT.get_unchecked().get_blockchain_info()?
+    }))
 }
 
 fn main() -> Result<()> {
