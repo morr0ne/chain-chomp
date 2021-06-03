@@ -40,6 +40,13 @@ fn get_block_count() -> Result<String> {
     Ok(unsafe { CLIENT.get_unchecked().get_block_count()?.to_string() })
 }
 
+#[get("/getblockhash?<height>")]
+fn get_block_hash(height: u64) -> Result<Json<BlockHash>> {
+    Ok(Json(unsafe {
+        CLIENT.get_unchecked().get_block_hash(height)?
+    }))
+}
+
 #[get("/getblockchaininfo")]
 fn get_blockchain_info() -> Result<Json<GetBlockchainInfoResult>> {
     Ok(Json(unsafe {
@@ -101,6 +108,7 @@ fn main() -> Result<()> {
                 get_best_block_hash,
                 get_block,
                 get_block_count,
+                get_block_hash,
                 get_blockchain_info
             ],
         )
